@@ -57,16 +57,3 @@
     )
   )
 
-
-((wrap-tinted-proxy (constantly {:status 403})
-                    "/postman" "http://www.postman-echo.com"
-                    :update-req-body-fn #(str (:body %) "al final en request")
-                    :update-req-headers-fn #(:headers (assoc-in % [:headers "token"] "t"))
-                    :update-resp-body-fn #(str (:body %) "al final en response")
-                    :update-resp-headers-fn #(dissoc (:headers %) :content-type)
-                    )
-  {:request-method :post
-   :headers {"algo" "value"
-             "Content-type" "aplication/json"}
-   :uri "/postman/post"
-   :body "req body"})
