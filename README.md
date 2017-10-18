@@ -2,7 +2,7 @@
 
 A non-transparent proxy ring middleware. 
 It accept a conversion-fn to generate a request map (see http://www.http-kit.org/client.html#options)
-It comes with a default conversion function to act as a transparent proxy  
+It comes with a default conversion function to act as a transparent proxy (see https://github.com/tailrecursion/ring-proxy for an alternative). 
 
 ### Dependency
 
@@ -21,7 +21,7 @@ It comes with a default conversion function to act as a transparent proxy
       )
 ```
 
-### conversion-fn
+### Example of conversion-fn
 ```clojure
 
 (defn conversion-fn [req base-path]
