@@ -1,14 +1,35 @@
 # tinted-proxy
 
-A Clojure library designed to ... well, that part is up to you.
+A non-transparent proxy ring middleware. 
+It accept a conversion-fn to generate a request map (see http://www.http-kit.org/client.html#options)
+It comes with a default conversion function to act as a transparent proxy  
 
-## Usage
+### Dependency
 
-FIXME
+```clojure
+[tinted-proxy "0.1.0-SNAPSHOT"]
+```
+### Usage
 
-## License
+```clojure
+(ns your-ns
+  (:require [tinted-proxy.core :refer [wrap-tinted-proxy]]))
+(def app
+  (-> routes
+      (wrap-tinted-proxy "/proxy" #'conversion-fn)
+      (wrap-tinted-proxy "/google" "http://www.google.com"))
+      )
+```
 
-Copyright © 2017 FIXME
+### conversion-fn
+```clojure
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+(defn conversion-fn [req base-path]
+    {:url (convert-url (:url req))
+     :method (:request-method req)
+     :headers (dissoc (:headers req) "host" "content-length")
+     :body  (:body req)
+     }
+  )
+```
+
