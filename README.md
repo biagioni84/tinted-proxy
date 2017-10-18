@@ -16,7 +16,7 @@ It comes with a default conversion function to act as a transparent proxy (see h
   (:require [tinted-proxy.core :refer [wrap-tinted-proxy]]))
 (def app
   (-> routes
-      (wrap-tinted-proxy "/proxy" #'conversion-fn)
+      (wrap-tinted-proxy "/proxy" conversion-fn)
       (wrap-tinted-proxy "/google" "http://www.google.com"))
       )
 ```
@@ -25,7 +25,7 @@ It comes with a default conversion function to act as a transparent proxy (see h
 ```clojure
 
 (defn conversion-fn [req base-path]
-    {:url (convert-url (:url req))
+    {:url (my-url-conversion-fn (:url req))
      :method (:request-method req)
      :headers (dissoc (:headers req) "host" "content-length")
      :body  (:body req)
