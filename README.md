@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/tinted-proxy.svg)](https://clojars.org/tinted-proxy)
+
 # tinted-proxy
 
 A non-transparent proxy for ring. Uses [http-kit client](http://www.http-kit.org/client.html) to make requests. 

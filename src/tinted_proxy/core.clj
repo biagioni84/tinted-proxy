@@ -14,6 +14,7 @@
     )
   )
 ;; TODO: add a handler for maps and take local-path remote-uri and headers and inject headers
+;; TODO: add an error/exception-handler-fn (returns response on error)
 (defn wrap-tinted-proxy
   "Proxies a request by using a fn to convert from local to remote uri, using info extracted from the request.
   In case of exception returns a 403 status"
@@ -48,8 +49,9 @@
               ))
           )
         (catch Exception e
-          {:status 404 ;; TODO: make a 403 on prod to avoid leaking info about the exception
-           :body e}
+          ;{:status 404 ;; TODO: make a 403 on prod to avoid leaking info about the exception
+          ; :body e}
+          {:status 403}
           ))
       ;; add try/catch and return 403 on exception or maybe go to next handler?
       (handler req)
