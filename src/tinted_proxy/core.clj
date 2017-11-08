@@ -1,6 +1,7 @@
 (ns tinted-proxy.core
   (:import [java.net URI])
-  (:require [org.httpkit.client :as http])
+  (:require [org.httpkit.client :as http]
+            [clojure.string :as str])
   )
 
 (defn default-conversion-fn [req local-path remote-base-uri]
@@ -15,6 +16,11 @@
   )
 ;; TODO: add a handler for maps and take local-path remote-uri and headers and inject headers
 ;; TODO: add an error/exception-handler-fn (returns response on error)
+
+(defn camelize [input-string]
+  (let [words (str/split input-string #"[\s_-]+")]
+    (str/join "-"  (map str/capitalize words))))
+
 (defn wrap-tinted-proxy
   "Proxies a request by using a fn to convert from local to remote uri, using info extracted from the request.
   In case of exception returns a 403 status"
@@ -42,9 +48,9 @@
               {:status 405} ;; TODO: make a 403 on prod to avoid leaking info about the endpoint
               (let [resp-body (if update-resp-body-fn  (update-resp-body-fn resp) body)
                     resp-headers (if update-resp-headers-fn  (update-resp-headers-fn resp) headers)
+                    ccase (apply conj (map #(into {} {(camelize (name (key %))) (val %)}) (dissoc headers :transfer-encoding)))
                     ]
-                (println resp-headers)
-                (assoc resp :body resp-body :headers resp-headers)
+                (assoc resp :body resp-body :headers ccase)
                 )
               ))
           )
